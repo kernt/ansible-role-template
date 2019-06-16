@@ -1,16 +1,15 @@
 ---
-
-  tasks:
-
     - name: print interfaces
       command: echo "{{ ansible_interfaces }}"
 
      # show all the hosts in the inventory
-    - debug:
+    - name: show all the hosts in the inventory
+      debug:
         msg: "{{ item }}"
       loop: "{{ query('inventory_hostnames', 'all') }}"
      
      # show all the hosts in the current play
-    - debug:
+    - name: show all the hosts in the current play
+      debug:
         msg: "{{ item }}"
       loop: "{{ query('changed') }}"
