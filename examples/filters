@@ -1,0 +1,18 @@
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#filters-for-formatting-data
+
+The following filters will take a data structure in a template and render it in a slightly different format. These are occasionally useful for debugging:
+
+{{ some_variable | to_json }}
+{{ some_variable | to_yaml }}
+
+For human readable output, you can use:
+
+{{ some_variable | to_nice_json }}
+{{ some_variable | to_nice_yaml }}
+
+It’s also possible to change the indentation of both (new in version 2.2):
+
+{{ some_variable | to_nice_json(indent=2) }}
+{{ some_variable | to_nice_yaml(indent=8) }}
+
+

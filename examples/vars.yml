@@ -1,11 +1,46 @@
 working_dir: /home/ansible/working
 
+# 
 service_list:
 - httpd
 - nfs
 - mariadb
 
+# 
 share_paths: 
   nfs: /mnt/nfs
   cifs: /mnt/cifs
   iscsi: /mnt/iscsi
+
+
+And you will see the following fact added:
+
+"ansible_local": {
+        "preferences": {
+            "general": {
+                "asdf" : "1",
+                "bar"  : "2"
+            }
+        }
+ }
+
+And this data can be accessed in a template/playbook as:
+
+{{ ansible_local['preferences']['general']['asdf'] }}
+
+Accessing complex variable data
+
+We already described facts a little higher up in the documentation.
+
+Some provided facts, like networking information, are made available as nested data structures. To access them a simple {{ foo }} is not sufficient, but it is still easy to do. Here’s how we get an IP address:
+
+{{ ansible_facts["eth0"]["ipv4"]["address"] }}
+
+OR alternatively:
+
+{{ ansible_facts.eth0.ipv4.address }}
+
+Similarly, this is how we access the first element of an array:
+
+{{ foo[0] }}
+
