@@ -1,0 +1,14 @@
+## If there is an object already existed in $dst_path, remove it first.
+
+## Note: if the file is a 'tpl', there could be some errors, just ignore them.
+
+-   name: Clear for moving {{item.key}} to target path
+    file: path={{item.value.dst_path}} state=absent
+    ignore_errors: True
+    when: item.value.type != 'tpl'
+    
+
+-   name: Move {{item.key}} to dst path
+    shell: mv {{tmp_path}}/{{item.key}} {{item.value.dst_path}}
+    ignore_errors: True
+

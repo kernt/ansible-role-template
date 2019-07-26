@@ -1,0 +1,14 @@
+- name: add several users
+  user:
+    name: "{{ item }}"
+    state: present
+    groups: "wheel"
+  loop:
+     - testuser1
+     - testuser2
+
+
+- name: yum install packages example
+  yum:
+    name: "{{  list_of_something  }}"
+    state: present

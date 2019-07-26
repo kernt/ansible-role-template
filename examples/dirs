@@ -1,0 +1,14 @@
+# Set vras in your role or vars file
+# item:
+#   node: "node1"
+#   version: "latest"
+#   dir: "/opt/git/"
+#
+- name: Clone configuration directories
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ item.dir }}"
+    version: "{{ item.version }}"
+    update: yes
+    force: yes
+  loop: "{{ item }}"

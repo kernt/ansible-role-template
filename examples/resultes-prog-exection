@@ -1,0 +1,14 @@
+# http://docs.ansible.com/ansible/latest/playbooks_loops.html#iterating-over-the-results-of-a-program-execution
+- name: Example of looping over a command result
+  shell: "/usr/bin/frobnicate {{ item }}"
+  with_lines:
+    - "/usr/bin/frobnications_per_host --param {{ inventory_hostname }}"
+
+- name: Example of looping over a REMOTE command result
+  shell: "/usr/bin/something"
+  register: command_result
+
+- name: Do something with each result
+  shell: "/usr/bin/something_else --param {{ item }}"
+  with_items:
+    - "{{ command_result.stdout_lines }}"

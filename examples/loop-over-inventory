@@ -1,0 +1,20 @@
+# show all the hosts in the inventory
+- debug:
+    msg: "{{ item }}"
+  loop: "{{ groups['all'] }}"
+
+# show all the hosts in the current play
+- debug:
+    msg: "{{ item }}"
+  loop: "{{ ansible_play_batch }}"
+
+
+# show all the hosts in the inventory
+- debug:
+    msg: "{{ item }}"
+  loop: "{{ query('inventory_hostnames', 'all') }}"
+
+# show all the hosts matching the pattern, ie all but the group www
+- debug:
+    msg: "{{ item }}"
+  loop: "{{ query('inventory_hostnames', 'all:!www') }}"

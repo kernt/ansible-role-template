@@ -1,0 +1,27 @@
+# add some users
+- name: add several users
+  user:
+    name: "{{ item.name }}"
+    state: present
+    groups: "{{ item.groups }}"
+  loop:
+    - { name: 'testuser1', groups: 'wheel' }
+    - { name: 'testuser2', groups: 'root' }
+
+- name: create a tag dictionary of non-empty tags
+  set_fact:
+    tags_dict: "{{ (tags_dict|default({}))|combine({item.key: item.value}) }}"
+  loop: "{{ tags|dict2items }}"
+  vars:
+    tags:
+      Environment: dev
+      Application: payment
+      Another: "{{ doesnotexist|default() }}"
+  when: item.value != ""
+
+# register the last request
+  - shell: "echo {{ item }}"
+  loop:
+    - "one"
+    - "two"
+  register: echo

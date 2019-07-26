@@ -1,0 +1,17 @@
+# http://docs.ansible.com/ansible/latest/playbooks_loops.html#id4
+
+    # first ensure our target directory exists
+    - name: Ensure target directory exists
+      file:
+        dest: "/etc/fooapp"
+        state: directory
+
+    # copy each file over that matches the given pattern
+    - name: Copy each file over that matches the given pattern
+      copy:
+        src: "{{ item }}"
+        dest: "/etc/fooapp/"
+        owner: "root"
+        mode: 600
+      with_fileglob:
+        - "/playbooks/files/fooapp/*"

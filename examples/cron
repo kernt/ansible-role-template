@@ -1,0 +1,21 @@
+- name: remove Cron task to delete files in burp trash
+  cron:
+    name: delete files in burp trash
+    cron_file: manual_delete
+    state: absent
+  notify: restart cron server
+
+  - name: Cron task to delete files in burp trash
+  cron:
+    name: delete files in burp trash
+    job: 'rm -rfv {{ burp_trash  }}/* >> {{ burp_logs }}/manual_delete.log'
+    user: root
+    cron_file: manual_delete
+    minute: "{{ item.minute }}"
+    hour: "{{ item.hour }}"
+    weekday: "{{ item.dow }}"
+    state: present
+  with_items: "{{ burp_cron_delete }}"
+  notify: restart cron server
+
+  

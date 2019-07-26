@@ -1,0 +1,4 @@
+- name: supervisor | pause 10 seconds when supervisor started
+  pause:
+    seconds: 10
+  when: supervisor_started.changed or supervisor_restarted.changed

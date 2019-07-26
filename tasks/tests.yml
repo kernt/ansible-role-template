@@ -1,0 +1,34 @@
+---
+# https://docs.ansible.com/ansible/latest/modules/setup_module.html
+
+# Display facts from all hosts and store them indexed by I(hostname) at C(/tmp/facts).
+# ansible all -m setup --tree /tmp/facts
+
+# Display only facts regarding memory found by ansible on all hosts and output them.
+# ansible all -m setup -a 'filter=ansible_*_mb'
+
+# Display only facts returned by facter.
+# ansible all -m setup -a 'filter=facter_*'
+
+- name: Collect only facts returned by facter
+  setup:
+    gather_subset:
+      - '!all'
+      - '!any'
+      - facter
+
+- name: print interfaces
+  command: echo "{{ ansible_interfaces }}"
+
+# show all the hosts in the inventory
+- name: show all the hosts in the inventory
+  debug:
+    msg: "{{ item }}"
+  loop: "{{ query('inventory_hostnames', 'all') }}"
+     
+# show all the hosts in the current play
+- name: show all the hosts in the current play
+  debug:
+    msg: "{{ item }}"
+  loop: "{{ query('changed') }}"
+

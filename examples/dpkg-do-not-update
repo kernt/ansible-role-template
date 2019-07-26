@@ -1,0 +1,7 @@
+# http://docs.ansible.com/ansible/latest/dpkg_selections_module.html
+
+# Prevent python from being upgraded.
+- dpkg_selections:
+    name: python
+    selection: hold
+

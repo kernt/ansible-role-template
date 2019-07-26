@@ -1,0 +1,23 @@
+# Aus https://github.com/OndrejHome/ansible.iscsiadm/blob/master/tasks/main.yml
+
+- name: setup initiator name
+  lineinfile: dest=/etc/iscsi/initiatorname.iscsi regexp="^InitiatorName=" line="InitiatorName={{ iscsi_initiator_wwn }}"
+  when: iscsi_initiator_wwn is defined
+  notify: restart iscsid
+  
+- name: discover iSCSI server
+  shell: "iscsiadm --mode discoverydb --type sendtargets --portal {{ iscsi_target_ip }} --discover"
+  when: iscsi_target_ip is defined
+  args:
+  creates: "/var/lib/iscsi/nodes/{{ iscsi_target_wwn }}/{{ iscsi_target_ip }},{{ iscsi_target_port }},1/default"
+
+# Defines a /rolename/defaults Variable
+dnsmasq_config: false
+
+# the you can use in every main file Virable like the folloing
+- include: config_dnsmasq.yml
+  tags:
+    - dnsmasq_config
+  when: dnsmasq_config
+
+

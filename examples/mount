@@ -1,0 +1,24 @@
+  - name: " Deploy | Mounting blockdevice "
+    mount:
+      path: "/mnt/{{ item.alias }}"
+      src: "{{ devmap }}/{{ item.id }}"
+      state: mounted
+      fstype: "{{ filesystem }}"
+    register: blockmounted
+    with_items: "{{ wwid }}"
+    ignore_errors: true
+    notify: 
+      - "start iscsi"
+      - "start iscsid"
+    when:
+      - map 
+      - repath|succeeded
+
+- name: fstab entry exists
+  mount: 
+    name: "{{item.mountpoint}}"
+    src: "{{item.source}}"
+    fstype: "{{itemfstype}}"
+    opts: "{{item.opts}}"
+    state: "mounted"
+    when: source is defined

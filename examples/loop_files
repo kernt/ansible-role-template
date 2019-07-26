@@ -1,0 +1,19 @@
+# http://docs.ansible.com/ansible/latest/playbooks_loops.html#looping-over-hashes
+# tasks: 
+    # emit a debug message containing the content of each file.
+    - debug:
+        msg: "{{ item }}"
+      with_file:
+        - first_example_file
+        - second_example_file
+
+# Assuming that first_example_file contained the text “hello” and second_example_file contained the text “world”, this would result in:
+#TASK [debug msg={{ item }}] ******************************************************
+#ok: [localhost] => (item=hello) => {
+#    "item": "hello",
+#    "msg": "hello"
+#}
+#ok: [localhost] => (item=world) => {
+#    "item": "world",
+#    "msg": "world"
+#}

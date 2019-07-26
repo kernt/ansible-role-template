@@ -1,0 +1,3 @@
+- name: Reload facts if they were modified
+  action: setup
+  when: persistent_paths_register_facts | changed

@@ -1,0 +1,5 @@
+# http://docs.ansible.com/ansible/latest/playbooks_error_handling.html
+- hosts: somehosts
+  any_errors_fatal: true
+  roles:
+    - myrole

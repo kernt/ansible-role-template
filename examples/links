@@ -1,0 +1,18 @@
+burp_server_clientconfdir: /etc/
+
+
+- name: Link client configuration files
+  shell: "ln -fs {{ item.dir }}/* ./"
+  args:
+    chdir: "{{ burp_server_clientconfdir }}"
+  with_items: "{{ burp_repos }}"
+  changed_when: false
+  tags:
+    - skip_ansible_lint
+
+
+- name: Remove deprecated links
+  shell: 'find . -type l -xtype l -exec rm -rf {} \;'
+  args:
+    chdir: "{{ burp_server_clientconfdir }}"
+  changed_when: false

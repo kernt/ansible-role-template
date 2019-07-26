@@ -1,0 +1,20 @@
+##  Checking whether the own specified is existed. Note, match it exactlly with a ':'. 
+
+-   name: Checking whether the owner {{item.value.with_owner}} is existed.
+    shell: "cat /etc/passwd | egrep \"^{{item.value.with_owner}}:\" | grep -v 'grep' | wc -l"
+    register: is_existed
+    when: item.value.with_owner is defined
+
+-   name: Create the user if not exist.
+    user: name={{item.value.with_owner}}
+    when: item.value.with_owner is defined and is_existed.stdout == '0'
+
+## Once you want to change the owner of the file, you need to define the 'group' too, or there will be an error. 
+-   name: Change {{item.key}} owner and group
+    file: path={{item.value.dst_path}} owner={{item.value.with_owner}} group={{item.value.with_owner}}
+    when: item.value.with_owner is defined
+
+-   name: Change {{item.key}} permission
+    file: path={{item.value.dst_path}} mode={{item.value.with_permission}}
+    when: item.value.with_permission is defined
+

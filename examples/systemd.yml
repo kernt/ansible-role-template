@@ -1,0 +1,6 @@
+systemd:
+  - services:
+      Service:
+      - myservice
+        WorkingDirectory: /to/work/dir
+        binpath: "/path/to"

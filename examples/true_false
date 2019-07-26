@@ -1,0 +1,10 @@
+# Defines a /rolename/defaults Variable 
+dnsmasq_config: false
+
+# the you can use in every main file Virable like the folloing
+- include: config_dnsmasq.yml
+  tags:
+    - dnsmasq_config
+  when: dnsmasq_config
+
+

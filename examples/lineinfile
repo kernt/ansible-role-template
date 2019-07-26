@@ -1,0 +1,13 @@
+- name: FS modules are loaded during boot of Debian/Ubuntu
+  lineinfile:
+    dest: /etc/initramfs-tools/modules
+    line: "{{ item }}"
+    insertafter: EOF
+  with_items:
+    - item1
+    - item2
+    - item3
+  notify: update initramfs
+  when: (fstype == '9p') and ((ansible_distribution == 'Debian') or (ansible_distribution == 'Ubuntu'))
+  
+  

@@ -1,0 +1,20 @@
+---
+- include : all.yml
+- include : dev.yml
+
+- include: ../inventories/test.yml
+  when: 
+    - env == "test"
+  tags: test
+
+- include: ../inventories/prod.yml
+  when: 
+    - env == "prod"
+  tags: 
+    - prod
+    - tserver
+
+- include: ../inventories/dev.yml
+  when:
+    - env == "dev"
+  tags: dev

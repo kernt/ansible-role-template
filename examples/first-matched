@@ -1,0 +1,8 @@
+# http://docs.ansible.com/ansible/latest/playbooks_loops.html#finding-first-matched-files
+- name: INTERFACES | Create Ansible header for /etc/network/interfaces
+  template:
+    src: "{{ item }}"
+    dest: "/etc/foo.conf"
+  with_first_found:
+    - "{{ ansible_virtualization_type }}_foo.conf"
+    - "default_foo.conf"

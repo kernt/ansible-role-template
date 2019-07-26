@@ -1,0 +1,8 @@
+## If there is an object already existed in $tmp_path, remove it first or copy may be failed.
+
+-   name: Clearing temp dirs
+    file: path={{tmp_path}} state=absent
+    ignore_errors: True
+
+-   name: Make temp dir for copying {{item.key}}
+    file: path={{tmp_path}} state=directory

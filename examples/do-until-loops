@@ -1,0 +1,7 @@
+# http://docs.ansible.com/ansible/latest/playbooks_loops.html#do-until-loops
+- action:
+    shell /usr/bin/foo
+  register: result
+  until: result.stdout.find("all systems go") != -1
+  retries: 5
+  delay: 10
