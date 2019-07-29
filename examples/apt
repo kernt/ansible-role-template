@@ -20,12 +20,10 @@
     - "deb https://packagecloud.io/github/git-lfs/{{ansible_distribution|lower}}/ {{ansible_distribution_release}} main"
 - "deb-src https://packagecloud.io/github/git-lfs/{{ansible_distribution|lower}}/ {{ansible_distribution_release}} main"
 
-
 - name: Ensure github git-lfs is installed (Debian)
   apt:
     name=git-lfs={{ git_lfs_version }}
     state=present
-
 
 - name: Install the cockpit packages for OS Debian
   apt: 
