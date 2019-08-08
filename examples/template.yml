@@ -1,12 +1,34 @@
---- # template example
-- hosts: localhost
-  gather_facts: no
-  become: yes
-  vars:
-    code_name: whisky
-    version: 4.2
-  tasks:
-    - name: deploy config file
-      template:
-        src: config.j2
-        dest: /opt/config
+- name: be sure ntp is configured
+  template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+  notify:
+    - restart ntpd
+  tags: ntp
+
+- name: Create Logstash configuration files.
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/logstash/conf.d/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - 01-beats-input.conf
+    - 30-elasticsearch-output.conf
+  notify: restart logstash
+
+- name: Add Logstash repository.
+  template:
+    src: logstash.repo.j2
+    dest: /etc/yum.repos.d/logstash.repo
+    mode: 0644
+
+# http://docs.ansible.com/ansible/latest/playbooks_loops.html#finding-first-matched-files
+- name: INTERFACES | Create Ansible header for /etc/network/interfaces
+  template:
+    src: "{{ item }}"
+    dest: "/etc/foo.conf"
+  with_first_found:
+    - "{{ ansible_virtualization_type }}_foo.conf"
+    - "default_foo.conf"

@@ -68,3 +68,39 @@
   with_items:
     - { src: "autoupgrade_script", dest: "{{ burp_server_autoupgrade_dir }}/win32/script" }
     - { src: "autoupgrade_script", dest: "{{ burp_server_autoupgrade_dir }}/win64/script" }
+
+- name: Create Logstash filters.
+  copy:
+    src: "filters/{{ item }}"
+    dest: "/etc/logstash/conf.d/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - 10-syslog.conf
+    - 11-nginx.conf
+    - 12-apache.conf
+    - 14-solr.conf
+    - 15-drupal.conf
+  notify: restart logstash
+
+- name: Copy SSL key and cert for logstash-forwarder.
+  copy:
+    src: "{{ item }}"
+    dest: "{{ logstash_ssl_dir }}/{{ item | basename }}"
+    mode: 0644
+  with_items:
+    - "{{ logstash_ssl_key_file }}"
+    - "{{ logstash_ssl_certificate_file }}"
+  notify: restart logstash
+  when: logstash_ssl_key_file
+
+    # copy each file over that matches the given pattern
+- name: Copy each file over that matches the given pattern
+    copy:
+      src: "{{ item }}"
+      dest: "/etc/fooapp/"
+      owner: "root"
+      mode: 600
+    with_fileglob:
+      - "/playbooks/files/fooapp/*"

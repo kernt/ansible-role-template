@@ -1,5 +1,7 @@
 - name: Add an Apt signing key (Debian)
-  apt_key: url=https://packagecloud.io/gpg.key state=present
+  apt_key:
+    url: https://packagecloud.io/gpg.key
+    state: present
   
 - name: Ensure requirements are installed (Debian)
   apt:
@@ -32,3 +34,14 @@
   loop:
    - "{{ list_with_pkgs }}"
   when: ansible_os_family == 'Debian'
+
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=86400
+
+- name: Ensure PHP packages are installed.
+  apt:
+    name: "{{ php_packages }}"
+    state: "{{ php_packages_state }}"
+    install_recommends: "{{ php_install_recommends }}"
+  register: php_package_install
+  notify: restart webserver

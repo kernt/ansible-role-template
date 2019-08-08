@@ -7,7 +7,7 @@ service_list:
 - mariadb
 
 # 
-share_paths: 
+share_paths:
   nfs: /mnt/nfs
   cifs: /mnt/cifs
   iscsi: /mnt/iscsi

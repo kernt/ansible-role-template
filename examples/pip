@@ -12,3 +12,12 @@
     version: "{{ item.version}}"
   with_items: "{{ burpui_pip_packages }}"
   notify: restart buiagent
+
+- name: Ensure pip_install_packages are installed.
+  pip:
+    name: "{{ item.name | default(item) }}"
+    version: "{{ item.version | default(omit) }}"
+    virtualenv: "{{ item.virtualenv | default(omit) }}"
+    state: "{{ item.state | default(omit) }}"
+    executable: "{{ pip_executable }}"
+  with_items: "{{ pip_install_packages }}"

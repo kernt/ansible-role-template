@@ -50,3 +50,10 @@
   when: >
         (dnsmasq_enable_tftp is defined and
         dnsmasq_enable_tftp)
+
+- name: Ensure configuration for local syslog is absent if disabled.
+  file:
+    path: /etc/logstash/conf.d/02-local-syslog-input.conf
+    state: absent
+  when: not logstash_monitor_local_syslog
+  notify: restart logstash

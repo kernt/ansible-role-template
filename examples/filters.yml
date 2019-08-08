@@ -1,0 +1,202 @@
+# filters
+
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#filters-for-formatting-data
+
+## The following filters will take a data structure in a template and render it in a slightly different format. These are occasionally useful for debugging:
+
+{{ some_variable | to_json }}
+{{ some_variable | to_yaml }}
+
+## For human readable output, you can use:
+
+{{ some_variable | to_nice_json }}
+{{ some_variable | to_nice_yaml }}
+
+## It’s also possible to change the indentation of both (new in version 2.2):
+
+{{ some_variable | to_nice_json(indent=2) }}
+{{ some_variable | to_nice_yaml(indent=8) }}
+
+
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#url-split-filter
+{{ "http://user:password@www.acme.com:9000/dir/index.html?query=term#fragment" | urlsplit('hostname') }}
+# => 'www.acme.com'
+
+{{ "http://user:password@www.acme.com:9000/dir/index.html?query=term#fragment" | urlsplit('netloc') }}
+# => 'user:password@www.acme.com:9000'
+
+{{ "http://user:password@www.acme.com:9000/dir/index.html?query=term#fragment" | urlsplit('username') }}
+# => 'user'
+
+{{ "http://user:password@www.acme.com:9000/dir/index.html?query=term#fragment" | urlsplit('password') }}
+# => 'password'
+
+{{ "http://user:password@www.acme.com:9000/dir/index.html?query=term#fragment" | urlsplit('path') }}
+# => '/dir/index.html'
+
+{{ "http://user:password@www.acme.com:9000/dir/index.html?query=term#fragment" | urlsplit('port') }}
+# => '9000'
+
+{{ "http://user:password@www.acme.com:9000/dir/index.html?query=term#fragment" | urlsplit('scheme') }}
+# => 'http'
+
+{{ "http://user:password@www.acme.com:9000/dir/index.html?query=term#fragment" | urlsplit('query') }}
+# => 'query=term'
+
+{{ "http://user:password@www.acme.com:9000/dir/index.html?query=term#fragment" | urlsplit('fragment') }}
+# => 'fragment'
+
+{{ "http://user:password@www.acme.com:9000/dir/index.html?query=term#fragment" | urlsplit }}
+# =>
+#   {
+#       "fragment": "fragment",
+#       "hostname": "www.acme.com",
+#       "netloc": "user:password@www.acme.com:9000",
+#       "password": "password",
+#       "path": "/dir/index.html",
+#       "port": 9000,
+#       "query": "query=term",
+#       "scheme": "http",
+#       "username": "user"
+#   }
+
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#regular-expression-filters
+To search a string with a regex, use the “regex_search” filter:
+
+# search for "foo" in "foobar"
+{{ 'foobar' | regex_search('(foo)') }}
+
+# will return empty if it cannot find a match
+{{ 'ansible' | regex_search('(foobar)') }}
+
+# case insensitive search in multiline mode
+{{ 'foo\nBAR' | regex_search("^bar", multiline=True, ignorecase=True) }}
+
+To search for all occurrences of regex matches, use the “regex_findall” filter:
+
+# Return a list of all IPv4 addresses in the string
+{{ 'Some DNS servers are 8.8.8.8 and 8.8.4.4' | regex_findall('\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b') }}
+
+To replace text in a string with regex, use the “regex_replace” filter:
+
+# convert "ansible" to "able"
+{{ 'ansible' | regex_replace('^a.*i(.*)$', 'a\\1') }}
+
+# convert "foobar" to "bar"
+{{ 'foobar' | regex_replace('^f.*o(.*)$', '\\1') }}
+
+# convert "localhost:80" to "localhost, 80" using named groups
+{{ 'localhost:80' | regex_replace('^(?P<host>.+):(?P<port>\\d+)$', '\\g<host>, \\g<port>') }}
+
+# convert "localhost:80" to "localhost"
+{{ 'localhost:80' | regex_replace(':80') }}
+
+# add "https://" prefix to each item in a list
+{{ hosts | map('regex_replace', '^(.*)$', 'https://\\1') | list }}
+
+To concatenate a list into a string:
+
+{{ list | join(" ") }}
+
+To get the last name of a file path, like ‘foo.txt’ out of ‘/etc/asdf/foo.txt’:
+
+{{ path | basename }}
+
+To get the last name of a windows style file path (new in version 2.0):
+
+{{ path | win_basename }}
+
+To separate the windows drive letter from the rest of a file path (new in version 2.0):
+
+{{ path | win_splitdrive }}
+
+To get only the windows drive letter:
+
+{{ path | win_splitdrive | first }}
+
+To get the rest of the path without the drive letter:
+
+{{ path | win_splitdrive | last }}
+
+To get the directory from a path:
+
+{{ path | dirname }}
+
+To get the directory from a windows path (new version 2.0):
+
+{{ path | win_dirname }}
+
+To expand a path containing a tilde (~) character (new in version 1.5):
+
+{{ path | expanduser }}
+
+To expand a path containing environment variables:
+
+{{ path | expandvars }}
+
+To get the real path of a link (new in version 1.8):
+
+{{ path | realpath }}
+
+To get the relative path of a link, from a start point (new in version 1.7):
+
+{{ path | relpath('/etc') }}
+
+To get the root and extension of a path or filename (new in version 2.0):
+
+# with path == 'nginx.conf' the return would be ('nginx', '.conf')
+{{ path | splitext }}
+
+To work with Base64 encoded strings:
+
+{{ encoded | b64decode }}
+{{ decoded | b64encode }}
+
+As of version 2.6, you can define the type of encoding to use, the default is utf-8:
+
+{{ encoded | b64decode(encoding='utf-16-le') }}
+{{ decoded | b64encode(encoding='utf-16-le') }}
+
+To create a UUID from a string (new in version 1.9):
+
+{{ hostname | to_uuid }}
+
+To cast values as certain types, such as when you input a string as “True” from a vars_prompt and the system doesn’t know it is a boolean value:
+
+- debug:
+    msg: test
+  when: some_string_value | bool
+
+o make use of one attribute from each item in a list of complex variables, use the “map” filter (see the Jinja2 map() docs for more):
+
+# get a comma-separated list of the mount points (e.g. "/,/mnt/stuff") on a host
+{{ ansible_mounts | map(attribute='mount') | join(',') }}
+
+To get date object from string use the to_datetime filter, (new in version in 2.2):
+
+# Get total amount of seconds between two dates. Default date format is %Y-%m-%d %H:%M:%S but you can pass your own format
+{{ (("2016-08-14 20:00:12" | to_datetime) - ("2015-12-25" | to_datetime('%Y-%m-%d'))).total_seconds()  }}
+
+# Get remaining seconds after delta has been calculated. NOTE: This does NOT convert years, days, hours, etc to seconds. For that, use total_seconds()
+{{ (("2016-08-14 20:00:12" | to_datetime) - ("2016-08-14 18:00:00" | to_datetime)).seconds  }}
+# This expression evaluates to "12" and not "132". Delta is 2 hours, 12 seconds
+
+# get amount of days between two dates. This returns only number of days and discards remaining hours, minutes, and seconds
+{{ (("2016-08-14 20:00:12" | to_datetime) - ("2015-12-25" | to_datetime('%Y-%m-%d'))).days  }}
+
+To format a date using a string (like with the shell date command), use the “strftime” filter:
+
+# Display year-month-day
+{{ '%Y-%m-%d' | strftime }}
+
+# Display hour:min:sec
+{{ '%H:%M:%S' | strftime }}
+
+# Use ansible_date_time.epoch fact
+{{ '%Y-%m-%d %H:%M:%S' | strftime(ansible_date_time.epoch) }}
+
+# Use arbitrary epoch value
+{{ '%Y-%m-%d' | strftime(0) }}          # => 1970-01-01
+{{ '%Y-%m-%d' | strftime(1441357287) }} # => 2015-09-04
+
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#kubernetes-filters

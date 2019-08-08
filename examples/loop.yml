@@ -1,12 +1,111 @@
---- # loop example
-- hosts: localhost
-  become: yes
-  tasks:
-    - name: install software
-      yum:
-        name: "{{ item }}"
-        state: absent
-      loop:
-        - elinks
-        - nmap-ncat
-        - bind-utils
+---
+#https://docs.ansible.com/ansible/2.5/user_guide/playbooks_loops.html#standard-loops
+#To save some typing, repeated tasks can be written in short-hand like so:
+- name: add several users
+  user:
+    name: "{{ item }}"
+    state: present
+    groups: "wheel"
+  loop:
+     - testuser1
+     - testuser2
+# If you have defined a YAML list in a variables file, or the ‘vars’ section, you can also do:
+loop: "{{ somelist }}"
+
+# The above would be the equivalent of:
+- name: add user testuser1
+  user:
+    name: "testuser1"
+    state: present
+    groups: "wheel"
+- name: add user testuser2
+  user:
+    name: "testuser2"
+    state: present
+    groups: "wheel"
+
+# Some plugins like, the yum and apt modules can take lists directly to their options, this is more optimal than looping over the task. See each action’s documentation for details, for now here is an example:
+
+- name: optimal yum
+  yum:
+    name: "{{list_of_packages}}"
+    state: present
+
+- name: non optimal yum, not only slower but might cause issues with interdependencies
+  yum:
+    name: "{{item}}"
+    state: present
+  loop: "{{list_of_packages}}"
+
+# Note that the types of items you iterate over do not have to be simple lists of strings. If you have a list of hashes, you can reference subkeys using things like:
+- name: add several users
+  user:
+    name: "{{ item.name }}"
+    state: present
+    groups: "{{ item.groups }}"
+  loop:
+    - { name: 'testuser1', groups: 'wheel' }
+    - { name: 'testuser2', groups: 'root' }
+
+# https://docs.ansible.com/ansible/2.5/user_guide/playbooks_loops.html#complex-loops
+# Sometimes you need more than what a simple list provides, you can use Jinja2 expressions to create complex lists: For example, using the ‘nested’ lookup, you can combine lists:
+- name: give users access to multiple databases
+  mysql_user:
+    name: "{{ item[0] }}"
+    priv: "{{ item[1] }}.*:ALL"
+    append_privs: yes
+    password: "foo"
+  loop: "{{ query('nested', [ 'alice', 'bob' ], [ 'clientdb', 'employeedb', 'providerdb' ]) }}"
+
+- name: install software
+  yum:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - elinks
+    - nmap-ncat
+    - bind-utils
+
+- name: Check services
+  service:
+    name: "{{ item }}"
+    state: started
+  loop: "{{ service_list }}"
+
+#https://docs.ansible.com/ansible/2.5/user_guide/playbooks_loops.html#using-lookup-vs-query-with-loop
+loop: "{{ query('nested', ['alice', 'bob'], ['clientdb', 'employeedb', 'providerdb']) }}"
+
+loop: "{{ lookup('nested', ['alice', 'bob'], ['clientdb', 'employeedb', 'providerdb'], wantlist=True) }}"
+
+#https://docs.ansible.com/ansible/2.5/user_guide/playbooks_loops.html#do-until-loops
+# Do-Until Loops
+- shell: /usr/bin/foo
+  register: result
+  until: result.stdout.find("all systems go") != -1
+  retries: 5
+  delay: 10
+
+#http://docs.ansible.com/ansible/latest/playbooks_loops.html#looping-over-hashes
+# variables 
+users:
+  alice:
+    name: Alice Appleworth
+    telephone: 123-456-7890
+  bob:
+    name: Bob Bananarama
+    telephone: 987-654-3210
+
+tasks:
+  - name: Print phone records
+    debug:
+      msg: "User {{ item.key }} is {{ item.value.name }} ({{ item.value.telephone }})"
+    with_dict: "{{ users }}"
+
+- name: add several users
+  user:
+    name: "{{ item }}"
+    state: present
+    groups: "wheel"
+  loop:
+     - testuser1
+     - testuser2
