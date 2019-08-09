@@ -1,0 +1,34 @@
+- name: Clone git repository
+  git: 
+    repo: https://gitlab.example.org/example-user/example-repo.git 
+    dest: /opt/example 
+    version: production 
+    force: yes
+  register: examplesoftware
+
+#https://www.jeffgeerling.com/blog/2018/cloning-private-github-repositories-ansible-on-remote-server-through-ssh
+- name: Clone a private repository into /opt.
+  git:
+    repo: git@github.com:geerlingguy/private-repo.git
+    version: master
+    dest: /opt/private-repo
+    accept_hostkey: yes
+  # ssh-agent doesn't allow key to pass through remote sudo commands.
+  become: no
+
+#https://codereview.stackexchange.com/questions/175616/clone-a-gitlab-private-repo-with-ansible
+- name: Checkout source code
+  git: 
+    repo: "git@gitlab.example.com:john.doe/my_repo.git"
+      dest: /home/{{ deployer_user }}/my_repo
+    key_file: /home/{{ deployer_user }}/.ssh/id_rsa
+    accept_hostkey: true
+
+- name: Clone configuration directories
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ item.dir }}"
+    version: "{{ item.version }}"
+    update: yes
+    force: yes
+  loop: "{{ item }}"

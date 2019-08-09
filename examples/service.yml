@@ -1,0 +1,6 @@
+- name: restart service if new version is deployed
+  service: 
+    name: example 
+    state: restarted 
+    enabled: yes
+  when: examplesoftware.changed

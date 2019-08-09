@@ -1,8 +1,4 @@
 --- # Ansible conditional example
-- hosts: remote
-  vars:
-    target_file: /home/ansible/hostname
-  tasks:
     - name: Gather file information
       stat:
         path: "{{ target_file }}"

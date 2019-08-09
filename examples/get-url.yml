@@ -8,3 +8,10 @@
   with_items:
     - { src: "https://sourceforge.net/projects/burp/files/burp-{{ autoupgrade_version }}/burp-win64-installer-{{ autoupgrade_version }}.exe/download", dest: "{{ burp_server_autoupgrade_dir }}/win64/{{ autoupgrade_version }}/package" }
     - { src: "https://sourceforge.net/projects/burp/files/burp-{{ autoupgrade_version }}/burp-win32-installer-{{ autoupgrade_version }}.exe/download", dest: "{{ burp_server_autoupgrade_dir }}/win32/{{ autoupgrade_version }}/package" }
+
+- name: Download nginx apt key
+  get_url: 
+    url: http://nginx.org/keys/nginx_signing.key 
+    dest: /var/keys/nginx_signing.key
+  register: aptkey
+

@@ -1,9 +1,5 @@
 # http://docs.ansible.com/ansible/latest/playbooks_loops.html#looping-over-integer-sequences
 ---
-- hosts: all
-
-  tasks:
-
     # create groups
     - group:
         name: "evens"
@@ -38,4 +34,3 @@
         state: present
       with_sequence:
         count: 4
-

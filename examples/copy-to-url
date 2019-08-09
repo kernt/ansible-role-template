@@ -1,18 +1,27 @@
 ## copy from local or download url
 
 -   name: Copying {{item.key}} from local
-    copy: src={{item.value.src_path}} dest={{tmp_path}}
+    copy: 
+      src: {{ item.value.src_path }}
+      dest: {{ tmp_path }}
     when: item.value.type is undefined or item.value.type == 'file'
     
--   name: Downloading {{item.key}} from url
-    get_url: url={{item.value.src_path}} dest={{tmp_path}}
+-   name: Downloading {{ item.key }} from url
+    get_url:
+      url: {{ item.value.src_path}}
+      dest: {{ tmp_path }}
     when: item.value.type is defined and item.value.type == 'url'
 
--   name: parse {{item.key}} from template
-    template: src={{item.value.src_path}} dest={{item.value.dst_path}}
+-   name: parse {{ item.key }} from template
+    template:
+      src: {{ item.value.src_path }} 
+      dest: {{ item.value.dst_path }}
     when: item.value.type is defined and item.value.type == 'tpl'
 
 -   name: Unpacking {{item.key}}
     ## unarchive need 'copy=no', thought I don't know why
-    unarchive: src={{tmp_path}}/{{item.value.name}} dest={{tmp_path}}  copy=no
+    unarchive: 
+      src: {{tmp_path}}/{{item.value.name}}
+      dest: {{tmp_path}}
+      copy: no
     when: item.value.type is defined and item.value.need_unpack == 'yes'

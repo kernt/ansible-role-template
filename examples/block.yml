@@ -1,6 +1,5 @@
 # https://docs.ansible.com/ansible/latest/user_guide/playbooks_blocks.html
 # Block example with named tasks inside the block
- tasks:
    - name: Install, configure, and start Apache
      block:
      - name: install httpd and memcached
@@ -26,7 +25,7 @@
 
 
 # Block error handling example
- tasks:
+
  - name: Handle the error
    block:
      - debug:

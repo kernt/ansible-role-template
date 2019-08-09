@@ -4,4 +4,3 @@
 - dpkg_selections:
     name: python
     selection: hold
-

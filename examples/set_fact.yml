@@ -1,0 +1,8 @@
+- name: Define java_packages.
+  set_fact:
+    java_packages: "{{ __java_packages | list }}"
+  when: java_packages is not defined
+
+- name: Set __apr_installed if already configured
+  set_fact:
+    __apr_installed: "{% if __apr_version_if_exists|failed %}false{% else %}{{ __apr_version_if_exists.stdout == apr_version }}{% endif %}"

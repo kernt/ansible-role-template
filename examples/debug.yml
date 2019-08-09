@@ -1,3 +1,31 @@
 - debug:
     msg: "distribution-version: {{ ansible_distribution }}-{{ ansible_distribution_major_version }}"
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_debugger.html 
 
+# On a task
+
+- name: Execute a command
+  command: false
+  debugger: on_failed
+
+On a play
+
+- name: Play
+  hosts: all
+  debugger: on_skipped
+  tasks:
+    - name: Execute a command
+      command: true
+      when: False
+
+# When provided at a generic level and a more specific level, the more specific wins:
+
+- name: Play
+  hosts: all
+  debugger: never
+  tasks:
+    - name: Execute a command
+      command: false
+      debugger: on_failed
+
+#

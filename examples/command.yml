@@ -32,3 +32,12 @@
   with_items: "{{ logstash_install_plugins }}"
   when: "item not in logstash_plugins_list.stdout"
   notify: restart logstash
+
+- name: Add nginx apt key
+  command: "apt-key add /var/keys/nginx_signing.key"
+  when: aptkey.changed
+
+- name: initialize vnstat database
+  command: sudo vnstat -u -i {{ interface }}
+  when: result.changed
+  notify: restart vnstat

@@ -2,7 +2,15 @@
   apt_key:
     url: https://packagecloud.io/gpg.key
     state: present
-  
+
+- name: Create folder for apt keys
+  file: 
+    path: /var/keys 
+    state: directory 
+    owner: root
+
+
+
 - name: Ensure requirements are installed (Debian)
   apt:
     name: "{{ item }}"
@@ -36,7 +44,14 @@
   when: ansible_os_family == 'Debian'
 
 - name: Update apt cache.
-  apt: update_cache=yes cache_valid_time=86400
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400
+
+- name: Update apt cache
+  apt: 
+    update_cache: yes
+  when: aptkey.changed
 
 - name: Ensure PHP packages are installed.
   apt:

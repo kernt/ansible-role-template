@@ -53,7 +53,7 @@
       content: |
         HOSTNAME;IPADDRESS;FQDN;OSNAME;OSVERSION;PROCESSOR;ARCHITECTURE;MEMORY;
         {% for host in hostvars %}
-        {%   set vars = hostvars[host|string] %}
+        {% set vars = hostvars[host|string] %}
         {{ vars.ansible_hostname }};{{ vars.remote_host }};{{ vars.ansible_fqdn }};{{ vars.ansible_distribution }};{{ vars.ansible_distribution_version }};{{ vars.ansible_processor[1] }};{{ vars.ansible_architecture }};{{ (vars.ansible_memtotal_mb/1024)|round|int }};  # NOQA
         {% endfor %}
       dest: /some/path/systems.csv
