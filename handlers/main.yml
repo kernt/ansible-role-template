@@ -3,7 +3,7 @@
 - name: systemd reload
   command: systemctl daemon-reload
   tags:
-  - skip_ansible_lint # [ANSIBLE0006] systemctl used in place of systemd module
+    - skip_ansible_lint # [ANSIBLE0006] systemctl used in place of systemd module
 
 # use for restart a service
 - name: "restart service"
