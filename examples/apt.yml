@@ -9,8 +9,6 @@
     state: directory 
     owner: root
 
-
-
 - name: Ensure requirements are installed (Debian)
   apt:
     name: "{{ item }}"
