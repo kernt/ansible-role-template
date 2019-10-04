@@ -8,7 +8,6 @@
     msg: "{{ item }}"
   loop: "{{ ansible_play_batch }}"
 
-
 # show all the hosts in the inventory
 - debug:
     msg: "{{ item }}"

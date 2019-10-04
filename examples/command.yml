@@ -41,3 +41,16 @@
   command: sudo vnstat -u -i {{ interface }}
   when: result.changed
   notify: restart vnstat
+
+- command: echo {{ item }}
+  loop: [ 0, 2, 4, 6, 8, 10 ]
+  when: item > 5
+
+- command: echo {{ item }}
+  loop: "{{ mylist|default([]) }}"
+  when: item > 5
+
+- command: echo {{ item.key }}
+  loop: "{{ query('dict', mydict|default({})) }}"
+  when: item.value > 5
+
