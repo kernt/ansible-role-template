@@ -9,18 +9,22 @@ lint:
   name: yamllint
 
 platforms:
-  - name: ansible-role-visual-studio-code-extensions-ubuntu-max
-    image: ubuntu:18.04
+  - name: ansible-role-visual-studio-code-extensions-centos
+    image: centos:7
+    dockerfile: ../default/Dockerfile.j2
 
 provisioner:
   name: ansible
+  playbooks:
+    converge: ../default/playbook.yml
   lint:
     name: ansible-lint
 
 scenario:
-  name: default
+  name: centos
 
 verifier:
   name: testinfra
+  directory: ../default/tests
   lint:
     name: flake8
