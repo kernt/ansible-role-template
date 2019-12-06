@@ -1,0 +1,5 @@
+---
+- name: optimal yum
+  apt:
+    name: "{{  list_of_packages  }}"
+    state: present

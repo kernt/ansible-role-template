@@ -25,10 +25,19 @@
   debug:
     msg: "{{ item }}"
   loop: "{{ query('inventory_hostnames', 'all') }}"
-     
+
 # show all the hosts in the current play
 - name: show all the hosts in the current play
   debug:
     msg: "{{ item }}"
   loop: "{{ query('changed') }}"
 
+- name: count our fruit
+  debug:
+    msg: "{{ item }} with index {{ my_idx }}"
+  loop:
+    - apple
+    - banana
+    - pear
+  loop_control:
+    index_var: my_idx

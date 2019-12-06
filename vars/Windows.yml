@@ -1,0 +1,9 @@
+---
+- name: Iterating over a simple list
+  user:
+    name: "{{ item }}"
+    state: present
+    groups: "wheel"
+  loop:
+     - list-item1
+     - list-item2

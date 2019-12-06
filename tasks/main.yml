@@ -11,3 +11,60 @@
     - '../vars/pkg-mgr/{{ ansible_pkg_mgr }}.yml'
     - ../vars/pkg-mgr/default.yml
   include_vars: '{{ item }}'
+
+- name: template a file
+  template:
+      src: "{{ item }}"
+      dest: /etc/myapp/foo.conf
+  loop: "{{ query('first_found', { 'files': myfiles, 'paths': mypaths}) }}"
+  vars:
+    myfiles:
+      - "{{ansible_facts['distribution']}}.conf"
+      -  default.conf
+    mypaths: ['search_location_one/somedir/', '/opt/other_location/somedir/']
+
+- name: retrieve the list of home directories
+    command: ls /home
+      register: home_dirs
+
+- name: add home dirs to the backup spooler
+    file:
+      path: /mnt/bkspool/{{ item }}
+      src: /home/{{ item }}
+      state: link
+    loop: "{{ home_dirs.stdout_lines }}"
+    # same as loop: "{{ home_dirs.stdout.split() }}"
+
+- name: add several users
+  user:
+    name: "{{ item.name }}"
+    state: present
+    groups: "{{ item.groups }}"
+  loop:
+    - { name: 'testuser1', groups: 'wheel' }
+    - { name: 'testuser2', groups: 'root' }
+
+- name: create a tag dictionary of non-empty tags
+  set_fact:
+    tags_dict: "{{ (tags_dict|default({}))|combine({item.key: item.value}) }}"
+  loop: "{{ tags|dict2items }}"
+  vars:
+    tags:
+      Environment: dev
+      Application: payment
+      Another: "{{ doesnotexist|default() }}"
+  when: item.value != ""
+
+- shell: "echo {{ item }}"
+  loop:
+    - "one"
+    - "two"
+  register: echo
+
+- name: give users access to multiple databases
+  mysql_user:
+    name: "{{ item[0] }}"
+    priv: "{{ item[1] }}.*:ALL"
+    append_privs: yes
+    password: "foo"
+  loop: "{{ ['alice', 'bob'] |product(['clientdb', 'employeedb', 'providerdb'])|list }}"
