@@ -1,0 +1,7 @@
+#Playbook
+
+    environment:
+      ENV_NAME: "{{ env_name|lower }}"
+...
+     TASK: "{{ 'yes' if ('prod' == ) else 'no' }}"
+...
