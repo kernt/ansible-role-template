@@ -2,6 +2,19 @@
     msg: "distribution-version: {{ ansible_distribution }}-{{ ansible_distribution_major_version }}"
 # https://docs.ansible.com/ansible/latest/user_guide/playbooks_debugger.html 
 
+- name: "loop through list"
+  debug:
+    msg: "An item: {{item}}"
+  with_items:
+    - 1
+    - 2
+    - 3
+
+- name: "loop through list from a variable"
+  debug: 
+    msg: "An item: {{item}}"
+  with_items: "{{ somelist }}"
+
 # On a task
 
 - name: Execute a command

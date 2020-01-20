@@ -16,3 +16,13 @@
     key: '{{ newuser_ssh_authorized_key }}'
     user: '{{ newuser_user }}'
   when: barman_ssh_authorized_key is defined
+
+- name: more complex items to add several users
+  user:
+    name: "{{ item.name }}"
+    uid: "{{ item.uid }}"
+    groups: "{{ item.groups }}"
+    state: present
+  with_items:
+     - { name: testuser1, uid: 1002, groups: "wheel, staff" }
+     - { name: testuser2, uid: 1003, groups: staff }
