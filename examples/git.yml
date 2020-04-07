@@ -20,7 +20,7 @@
 - name: Checkout source code
   git: 
     repo: "git@gitlab.example.com:john.doe/my_repo.git"
-      dest: /home/{{ deployer_user }}/my_repo
+    dest: /home/{{ deployer_user }}/my_repo
     key_file: /home/{{ deployer_user }}/.ssh/id_rsa
     accept_hostkey: true
 
