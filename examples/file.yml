@@ -57,3 +57,15 @@
     state: absent
   when: not logstash_monitor_local_syslog
   notify: restart logstash
+
+ - name: ansible create directory example
+   file:
+     path: "{{ item }}"
+     mode: "{{ item.mode }}"
+     state: "{{ item.state }}"
+     delegate_to: localhost
+   with_items:
+     - { dest: '/playbooks/',  mode: '770', state: 'directory'}
+     - { dest: '/host_vars/',  mode: '770', state: 'directory'}
+     - { dest: '/group_vars/',  mode: '770', state: 'directory'}
+     - { dest: '/roles/',  mode: '770', state: 'directory'}
