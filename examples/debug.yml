@@ -28,4 +28,11 @@ On a play
       command: false
       debugger: on_failed
 
-#
+# Get mesg from project_id
+- debug:
+    msg: "project_id: {{ project_id }}"
+
+# https://github.com/jongillies/rancher
+# "docker run -d --privileged -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/rancher:/var/lib/rancher rancher/agent:v{{ rancher_agent_version }} {{ rancher_token.json['registrationUrl'] }}"
+- debug:
+    msg: "{{ rancher_token.json['registrationUrl'] }}"
