@@ -10,16 +10,16 @@
   ignore_errors: true
   
   - name: return the registration token url of rancher server
-  uri:
-    method: POST
-    status_code: 201
-    url: "http://{{ server }}:{{ port }}/v1/registrationtokens?projectId={{ project_id.json['data'][0]['id'] }}"
-    return_content: yes
-  register: rancher_token_url
+    uri:
+      method: POST
+      status_code: 201
+      url: "http://{{ server }}:{{ port }}/v1/registrationtokens?projectId={{ project_id.json['data'][0]['id'] }}"
+      return_content: yes
+    register: rancher_token_url
   
   - name: return the registration token of rancher server
-  uri:
-    method: GET
-    url: "{{ token_url.json['links']['self'] }}"
-    return_content: yes
-  register: rancher_token
+    uri:
+      method: GET
+      url: "{{ token_url.json['links']['self'] }}"
+      return_content: yes
+    register: rancher_token

@@ -18,6 +18,18 @@
     - 30-elasticsearch-output.conf
   notify: restart logstash
 
+- name: Create Systemctl Service files.
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/systemd/system/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - service1.service
+    - service2.service
+  notify: restart "{{ item }}"
+
 - name: Add Logstash repository.
   template:
     src: logstash.repo.j2
@@ -32,3 +44,12 @@
   with_first_found:
     - "{{ ansible_virtualization_type }}_foo.conf"
     - "default_foo.conf"
+
+# Execute a script
+- name: Ensure matrix-remove-all script created
+  template:
+    src: "{{ role_path }}/templates/usr-local-bin/matrix-remove-all.j2"
+    dest: "{{ matrix_local_bin_path }}/matrix-remove-all"
+    mode: 0750
+
+

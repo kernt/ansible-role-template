@@ -54,3 +54,17 @@
   loop: "{{ query('dict', mydict|default({})) }}"
   when: item.value > 5
 
+- name: Import pivx gpg key
+  command: "gpg --keyserver {{ pivx_gpg_server }} --recv {{ pivx_gpg_key }}"
+  register: _pivx_import_key
+  changed_when: '"imported: 1" in _pivx_import_key.stderr'
+  when: pivx_gpg_key_status.rc != 
+
+- name: Check archive signature
+  command: "gpg --verify /tmp/pivx-{{ pivx_version }}.linux-{{ pivx_arch }}.xz.asc /tmp/pivx-{{ pivx_version }}.linux-{{ pivx_arch }}.xz"
+  changed_when: false
+
+- name: Unpack pivx binary
+  command:
+    cmd: "xz -k -d /tmp/pivx-{{ pivx_version }}.linux-{{ pivx_arch }}.xz"
+    creates: "/tmp/pivx-{{ pivx_version }}.linux-{{ pivx_arch }}"

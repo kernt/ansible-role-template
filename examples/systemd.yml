@@ -1,6 +1,18 @@
 systemd:
   - services:
       Service:
-      - myservice
+      - "{{ item }}"
         WorkingDirectory: /to/work/dir
         binpath: "/path/to"
+      with_items:
+      - service1
+
+systemd:
+  - services:
+      Service:
+      - "{{ item }}"
+        WorkingDirectory: /to/work/dir
+        binpath: "/path/to"
+      with_items:
+      - 01-beats-input.conf
+      - 30-elasticsearch-output.conf

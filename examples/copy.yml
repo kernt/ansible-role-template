@@ -95,7 +95,7 @@
   notify: restart logstash
   when: logstash_ssl_key_file
 
-    # copy each file over that matches the given pattern
+# copy each file over that matches the given pattern
 - name: Copy each file over that matches the given pattern
     copy:
       src: "{{ item }}"

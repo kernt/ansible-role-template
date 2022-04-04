@@ -1,0 +1,11 @@
+- name: icinga2 - Configuration - Custom plugin directory
+  blockinfile:
+    path: /etc/icinga2/constants.conf
+    block: |
+      /* The directory which contains the custom plugins by novomind. */
+      const CustomPluginDir = "/usr/local/icinga2/libexec"
+    marker: "# {mark} ANSIBLE MANAGED Configuration - Custom plugin directory"
+  notify:
+  - Restart icinga2
+  tags:
+  - icinga2
