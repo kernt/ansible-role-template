@@ -26,7 +26,6 @@ ansible_nodename
 ansible_os_family
 ansible_pkg_mgr
 ansible_selinux
-"ansible_service_mgr": "systemd"
 ansible_ssh_host_key_dsa_public
 ansible_ssh_host_key_ecdsa_public
 ansible_system

@@ -41,7 +41,7 @@
     state: directory
     mode: 0755
 
-# 
+#
 - name: dnsmasq_config | Ensuring {{ dnsmasq_tftpboot_dir }} Exists
   file:
     path: "{{ dnsmasq_tftpboot_dir }}"
@@ -58,13 +58,13 @@
   when: not logstash_monitor_local_syslog
   notify: restart logstash
 
- - name: ansible create directory example
+- name: ansible create directory example
    file:
      path: "{{ item }}"
      mode: "{{ item.mode }}"
      state: "{{ item.state }}"
      delegate_to: localhost
-   with_items:
+  with_items:
      - { dest: '/playbooks/',  mode: '770', state: 'directory'}
      - { dest: '/host_vars/',  mode: '770', state: 'directory'}
      - { dest: '/group_vars/',  mode: '770', state: 'directory'}
